@@ -8,8 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.example_item.view.*
 
-class ExampleAdapter(private val exampleList: List<ExampleItem>) :
-    RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() {
+class ExampleAdapter: RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() {
+    private val exampleList: MutableList<ExampleItem> = mutableListOf()
+    fun setData(exampleList: MutableList<ExampleItem>) {
+        this.exampleList.clear()
+        this.exampleList.addAll(exampleList)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.example_item,
