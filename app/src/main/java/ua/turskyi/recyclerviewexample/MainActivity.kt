@@ -1,6 +1,7 @@
 package ua.turskyi.recyclerviewexample
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -10,6 +11,19 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     lateinit var exampleList: MutableList<ExampleItem>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initView()
+        initListener()
+    }
+
+    private fun initListener() {
+        adapter.onItemClickListener = ::invoke
+    }
+
+    private fun invoke(item: ExampleItem) {
+        Toast.makeText(this, "${item.text1} ${item.text2}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun initView() {
         generateDummyList()
         initAdapter()
     }
@@ -17,12 +31,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private fun initAdapter() {
         adapter = ExampleAdapter()
         adapter.setData(exampleList)
-        recycler_view.adapter = adapter
-        recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.setHasFixedSize(true)
+        rv.adapter = adapter
+        rv.layoutManager = LinearLayoutManager(this)
+        rv.setHasFixedSize(true)
     }
 
     private fun generateDummyList() {
+
         exampleList = mutableListOf()
         for (i in 0 until 500) {
             val drawable = when (i % 3) {

@@ -6,19 +6,22 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.example_item.view.*
+import kotlinx.android.synthetic.main.item_example.view.*
 
-class ExampleAdapter: RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() {
+class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() {
+    var onItemClickListener: ((item: ExampleItem) -> Unit)? = null
     private val exampleList: MutableList<ExampleItem> = mutableListOf()
-    fun setData(exampleList: MutableList<ExampleItem>) {
+    fun setData(newExampleList: MutableList<ExampleItem>) {
         this.exampleList.clear()
-        this.exampleList.addAll(exampleList)
+        this.exampleList.addAll(newExampleList)
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.example_item,
-            parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(
+            R.layout.item_example,
+            parent, false
+        )
         return ExampleViewHolder(itemView)
     }
 
@@ -31,9 +34,15 @@ class ExampleAdapter: RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() {
 
     override fun getItemCount() = exampleList.size
 
-    class ExampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.image_view
-        val textView1: TextView = itemView.text_view_1
-        val textView2: TextView = itemView.text_view_2
+    inner class ExampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imageView: ImageView = itemView.iv
+        val textView1: TextView = itemView.tv1
+        val textView2: TextView = itemView.tv2
+
+        init {
+            itemView.setOnClickListener {
+                onItemClickListener?.invoke(exampleList[adapterPosition])
+            }
+        }
     }
 }
