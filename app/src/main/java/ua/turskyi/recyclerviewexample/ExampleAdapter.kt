@@ -27,7 +27,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() 
 
     override fun onBindViewHolder(holder: ExampleViewHolder, position: Int) {
         val currentItem = exampleList[position]
-        holder.imageView.setImageResource(currentItem.imageResource)
+        holder.imageView.setImageResource(currentItem.imgRes)
         holder.textView1.text = currentItem.text1
         holder.textView2.text = currentItem.text2
     }

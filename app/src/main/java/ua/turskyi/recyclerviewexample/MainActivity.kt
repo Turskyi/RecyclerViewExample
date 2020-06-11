@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     lateinit var adapter: ExampleAdapter
-    lateinit var exampleList: MutableList<ExampleItem>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
@@ -19,26 +18,21 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         adapter.onItemClickListener = ::invoke
     }
 
-    private fun invoke(item: ExampleItem) {
+    private fun invoke(item: ExampleItem) =
         Toast.makeText(this, "${item.text1} ${item.text2}", Toast.LENGTH_SHORT).show()
-    }
 
-    private fun initView() {
-        generateDummyList()
-        initAdapter()
-    }
+    private fun initView() = initAdapter()
 
     private fun initAdapter() {
         adapter = ExampleAdapter()
-        adapter.setData(exampleList)
+        adapter.setData(generateDummyList())
         rv.adapter = adapter
         rv.layoutManager = LinearLayoutManager(this)
         rv.setHasFixedSize(true)
     }
 
-    private fun generateDummyList() {
-
-        exampleList = mutableListOf()
+    private fun generateDummyList(): MutableList<ExampleItem> {
+        val exampleList: MutableList<ExampleItem> = mutableListOf()
         for (i in 0 until 500) {
             val drawable = when (i % 3) {
                 0 -> R.drawable.ic_launcher_foreground
@@ -48,5 +42,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             val item = ExampleItem(drawable, "Item $i", "Line 2")
             exampleList.plusAssign(item)
         }
+        return exampleList
     }
 }
