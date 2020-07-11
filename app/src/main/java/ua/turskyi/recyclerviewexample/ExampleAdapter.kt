@@ -10,29 +10,30 @@ import kotlinx.android.synthetic.main.item_example.view.*
 
 class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() {
     var onItemClickListener: ((item: ExampleItem) -> Unit)? = null
-    private val exampleList: MutableList<ExampleItem> = mutableListOf()
-    fun setData(newExampleList: MutableList<ExampleItem>) {
-        this.exampleList.clear()
-        this.exampleList.addAll(newExampleList)
-        notifyDataSetChanged()
-    }
+    var exampleList: MutableList<ExampleItem>? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(
-            R.layout.item_example,
-            parent, false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ExampleViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.item_example,
+                parent, false
+            )
         )
-        return ExampleViewHolder(itemView)
-    }
 
     override fun onBindViewHolder(holder: ExampleViewHolder, position: Int) {
-        val currentItem = exampleList[position]
-        holder.imageView.setImageResource(currentItem.imgRes)
-        holder.textView1.text = currentItem.text1
-        holder.textView2.text = currentItem.text2
+        val currentItem = exampleList?.get(position)
+        currentItem?.run {
+            holder.imageView.setImageResource(imgRes)
+            holder.textView1.text = text1
+            holder.textView2.text = text2
+        }
     }
 
-    override fun getItemCount() = exampleList.size
+    override fun getItemCount(): Int = exampleList?.size ?: 0
 
     inner class ExampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.iv
@@ -41,7 +42,8 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() 
 
         init {
             itemView.setOnClickListener {
-                onItemClickListener?.invoke(exampleList[adapterPosition])
+                exampleList?.get(bindingAdapterPosition)
+                    ?.let { exampleItem -> onItemClickListener?.invoke(exampleItem) }
             }
         }
     }
