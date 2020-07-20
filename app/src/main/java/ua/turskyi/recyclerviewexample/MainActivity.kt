@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private fun initAdapter() {
         adapter = ExampleAdapter()
-        adapter.exampleList = generateDummyList()
+        adapter.submitList(generateDummyList())
         rv.adapter = adapter
         rv.layoutManager = LinearLayoutManager(this)
         rv.setHasFixedSize(true)

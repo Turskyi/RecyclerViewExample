@@ -5,16 +5,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_example.view.*
 
-class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() {
+class ExampleAdapter : ListAdapter<ExampleItem ,ExampleAdapter.ExampleViewHolder>(DIFF_CALLBACK) {
+    companion object {
+        private val DIFF_CALLBACK: DiffUtil.ItemCallback<ExampleItem> =
+            object : DiffUtil.ItemCallback<ExampleItem>() {
+                override fun areItemsTheSame(oldItem: ExampleItem, newItem: ExampleItem): Boolean {
+                    return oldItem == newItem
+                }
+
+                override fun areContentsTheSame(oldItem: ExampleItem, newItem: ExampleItem): Boolean {
+                    return oldItem.imgRes == newItem.imgRes &&
+                            oldItem.text1 == newItem.text1 &&
+                            oldItem.text2 == newItem.text2
+                }
+            }
+    }
     var onItemClickListener: ((item: ExampleItem) -> Unit)? = null
-    var exampleList: MutableList<ExampleItem>? = null
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ExampleViewHolder(
@@ -25,15 +36,13 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() 
         )
 
     override fun onBindViewHolder(holder: ExampleViewHolder, position: Int) {
-        val currentItem = exampleList?.get(position)
+        val currentItem = getItem(position)
         currentItem?.run {
             holder.imageView.setImageResource(imgRes)
             holder.textView1.text = text1
             holder.textView2.text = text2
         }
     }
-
-    override fun getItemCount(): Int = exampleList?.size ?: 0
 
     inner class ExampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.iv
@@ -42,7 +51,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() 
 
         init {
             itemView.setOnClickListener {
-                exampleList?.get(bindingAdapterPosition)
+                getItem(bindingAdapterPosition)
                     ?.let { exampleItem -> onItemClickListener?.invoke(exampleItem) }
             }
         }
